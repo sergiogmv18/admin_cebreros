@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   http: ^1.1.0
   font_awesome_flutter: ^10.4.0
+  flutter_custom_clippers: ^2.1.0
+  flutter_launcher_icons: ^0.11.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -54,7 +56,11 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_icons:
+  image_path: "assets/images/logo_App.jpg"
+  #adaptive_icon_foreground: "assets/mr_Coolz.jpg"
+  android: true
+  ios: true
 # The following section is specific to Flutter packages.
 flutter:
   # The following line ensures that the Material Icons font is

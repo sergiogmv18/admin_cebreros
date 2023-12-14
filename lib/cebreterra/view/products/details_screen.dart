@@ -3,7 +3,7 @@ import 'package:admin_cebre/const/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../const/clipper.dart';
+import '../../../const/clipper.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({super.key});

@@ -25,6 +25,7 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
       var selectionModel = Provider.of<ContactCebreterraController>(context);
     return Scaffold(
       appBar: appBarCustom(context, route: '/cebreterra/home', changeLogo: 'cebreterra', showButtonReturn: true),
+      backgroundColor: CustomColors.frontColor,
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20),
         alignment: Alignment.topCenter,
@@ -121,29 +122,31 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
                                           ),
                                           textAlign: TextAlign.start,
                                         ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                         Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            IconButton(
+                                            TextButton(
+                                              child: Text('ver mas',
+                                                style:Theme.of(context).textTheme.titleMedium!.copyWith( 
+                                                  decorationColor: Colors.black,         // Color del subrayado
+                                                  decorationThickness: 1.5,decoration: TextDecoration.underline,
+                                                ),
+                                              ),
                                               onPressed: ()async{
                                                 showDetailsOfDoubts(allContacts[index]);
                                               },
-                                              icon: const FaIcon(FontAwesomeIcons.eye),
-                                              color: CustomColors.pantone5615,
-                                              iconSize: 50,
                                             ),
                                             IconButton(
                                               onPressed: ()async{
-                                                showCircularLoadingDialog(context);
+                                               showCircularLoadingDialog(context);
                                                 await ContactCebreterraController().deleteSpecificContact(allContacts[index]);
-                                                Navigator.of(context).pushNamedAndRemoveUntil('/el_cielo_de_cebreros/contact', (route) => false);
-                                              
+                                                Navigator.of(context).pushNamedAndRemoveUntil('/cebreterra/contact', (route) => false);
                                               },
                                               icon: const FaIcon(FontAwesomeIcons.trash),
                                               color: CustomColors.kSecondaryColor,
-                                              iconSize: 50,
+                                              iconSize: 30,
                                             ) 
-                                        ], 
+                                          ], 
                                         )
                                       ],
                                     )

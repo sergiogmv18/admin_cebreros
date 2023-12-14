@@ -1,5 +1,6 @@
 import 'package:admin_cebre/components/app_bar_custom.dart';
 import 'package:admin_cebre/components/buttom_menu.dart';
+import 'package:admin_cebre/style.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class HomeElCieloDeCebrerosScreenState extends State<HomeElCieloDeCebrerosScreen
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarCustom(context, route: '/', changeLogo: 'elcielodecebreros', showButtonReturn: true),
+      backgroundColor: CustomColors.frontColor,
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(

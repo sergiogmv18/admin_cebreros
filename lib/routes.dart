@@ -1,6 +1,7 @@
-import 'package:admin_cebre/cebreterra/view/categories.dart';
-import 'package:admin_cebre/cebreterra/view/contacts.dart';
-import 'package:admin_cebre/cebreterra/view/home_cebreterra.dart';
+import 'package:admin_cebre/cebreterra/view/category/categories_screen.dart';
+import 'package:admin_cebre/cebreterra/view/contacts_screen.dart';
+import 'package:admin_cebre/cebreterra/view/home_cebreterra_screen.dart';
+import 'package:admin_cebre/cebreterra/view/products/products_screen.dart';
 import 'package:admin_cebre/el_cielo_de_cebreros/views/contact.dart';
 import 'package:admin_cebre/el_cielo_de_cebreros/views/home_cebreros.dart';
 import 'package:admin_cebre/home.dart';
@@ -18,7 +19,7 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
 // CEBRETERRA
   '/cebreterra/home' : (BuildContext context) => const HomeCebreterraScreen(),
   '/cebreterra/contact': (BuildContext context) => const ContactCebreterraScreen(),
-  '/cebreterra/products': (BuildContext context) => const HomeCebreterraScreen(),
+  '/cebreterra/products': (BuildContext context) => const ProductsScreen(),
   '/cebreterra/categoria': (BuildContext context) => const CategoryebreterraScreen(),
   //'/home' : (BuildContext context) => HomeScreen( index: ModalRoute.of(context)!.settings.arguments as int?),  
   //'/login':(BuildContext context) => LoginScreen(data: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?), 

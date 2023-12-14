@@ -25,6 +25,7 @@ class ContactElCieloDeCebrerosScreenState extends State<ContactElCieloDeCebreros
       var selectionModel = Provider.of<ContactController>(context);
     return Scaffold(
       appBar: appBarCustom(context, route: '/el_cielo_de_cebreros/home', changeLogo: 'elcielodecebreros', showButtonReturn: true),
+      backgroundColor: CustomColors.frontColor,
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20),
         alignment: Alignment.topCenter,
@@ -122,15 +123,18 @@ class ContactElCieloDeCebrerosScreenState extends State<ContactElCieloDeCebreros
                                           textAlign: TextAlign.start,
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            IconButton(
+                                            TextButton(
+                                              child: Text('ver mas',
+                                                style:Theme.of(context).textTheme.titleMedium!.copyWith( 
+                                                  decorationColor: Colors.black,         // Color del subrayado
+                                                  decorationThickness: 1.5,decoration: TextDecoration.underline,
+                                                ),
+                                              ),
                                               onPressed: ()async{
                                                 showDetailsOfDoubts(allContacts[index]);
                                               },
-                                              icon: const FaIcon(FontAwesomeIcons.eye),
-                                              color: CustomColors.pantone5615,
-                                              iconSize: 50,
                                             ),
                                             IconButton(
                                               onPressed: ()async{
@@ -141,9 +145,9 @@ class ContactElCieloDeCebrerosScreenState extends State<ContactElCieloDeCebreros
                                               },
                                               icon: const FaIcon(FontAwesomeIcons.trash),
                                               color: CustomColors.kSecondaryColor,
-                                              iconSize: 50,
+                                              iconSize: 30,
                                             ) 
-                                        ], 
+                                          ], 
                                         )
                                       ],
                                     )

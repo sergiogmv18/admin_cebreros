@@ -34,6 +34,7 @@ class CategoryCebreterraController{
       'action': 'getAllCategories',
     };
     Map<String, dynamic> response = await RequestHttp().httpPost(parameters: parameters, server: RequestHttp.serverCebreterra);
+    print(response);
     if(response['success']){
       allContacts = await convertStringInObjCategories(data: response['payload']);
     }
@@ -57,4 +58,27 @@ class CategoryCebreterraController{
     print(response);
     return response['success'];
   } 
+
+
+
+/*
+  * Register Category
+  * @author SGV
+  * @version 1.0 - 20230215 - initial release
+  * @return  <Map<String, dynamic>>
+  */
+  Future<Map<String, dynamic>> registerOrEditCategory(CategoryCebreterra categoryCebreterra)async{
+    Map<String, dynamic> response = {};
+    Map<String, dynamic> parameters = {
+      'action':'registerOrEditCategory',
+      'name': categoryCebreterra.getName(),
+    };
+
+    if(categoryCebreterra.getServerId() != null){
+      parameters['id'] = categoryCebreterra.getServerId().toString();
+    }
+    response = await RequestHttp().httpPost(parameters: parameters,server: RequestHttp.serverCebreterra);
+    return response;
+  }
+
 }

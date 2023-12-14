@@ -1,6 +1,12 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.admin.cebre">
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="course_app"
+        android:label="Admin Cebre"
+        android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true" 
+        android:allowBackup="false"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
