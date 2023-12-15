@@ -44,10 +44,12 @@ class HomeElCieloDeCebrerosScreenState extends State<HomeElCieloDeCebrerosScreen
                   runSpacing: 10,
                   spacing: 10,
                   children: [
-                //CONTACTO
-                    buttonMenu(context, title: 'Preguntas o Alagos', route: '/el_cielo_de_cebreros/contact'),
                 // BOOKING
-                    buttonMenu(context, title: 'Reservas', route: '/el_cielo_de_cebreros/booking',),
+                    buttonMenu(context, title: 'Reservas', route: '/el_cielo_de_cebreros/booking'),
+                // BOOKING
+                    buttonMenu(context, title: 'Servicios', route: '/el_cielo_de_cebreros/services'),
+                //CONTACTO
+                    buttonMenu(context, title: 'Preguntas o Halagos', route: '/el_cielo_de_cebreros/contact'),
                   ],
                 ),
               ) 

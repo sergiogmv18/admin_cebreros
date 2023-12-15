@@ -1,7 +1,8 @@
-import 'package:admin_cebre/cebreterra/controller/contact_cebreterra_controller.dart';
-import 'package:admin_cebre/cebreterra/models/contact.dart';
 import 'package:admin_cebre/components/alert.dart';
 import 'package:admin_cebre/components/app_bar_custom.dart';
+import 'package:admin_cebre/el_cielo_de_cebreros/controllers/contact_controller.dart';
+import 'package:admin_cebre/el_cielo_de_cebreros/controllers/services_controller.dart';
+import 'package:admin_cebre/el_cielo_de_cebreros/models/contact.dart';
 import 'package:admin_cebre/components/circular_loading.dart';
 import 'package:admin_cebre/style.dart';
 import 'package:animate_do/animate_do.dart';
@@ -9,12 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class ContactCebreterraScreen extends StatefulWidget {
-  const ContactCebreterraScreen({super.key});
+class ServicesElCieloDeCebrerosScreen extends StatefulWidget {
+  const ServicesElCieloDeCebrerosScreen({super.key});
   @override
-   ContactCebreterraScreenState createState() => ContactCebreterraScreenState();
+   ServicesElCieloDeCebrerosScreenState createState() => ServicesElCieloDeCebrerosScreenState();
 }
-class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
+class ServicesElCieloDeCebrerosScreenState extends State<ServicesElCieloDeCebrerosScreen> {
   @override
   void initState() {
     super.initState();
@@ -22,10 +23,17 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
 
   @override
   Widget build(BuildContext context) {
-      var selectionModel = Provider.of<ContactCebreterraController>(context);
     return Scaffold(
-      appBar: appBarCustom(context, route: '/cebreterra/home', changeLogo: 'cebreterra', showButtonReturn: true),
+      appBar: appBarCustom(context, route: '/el_cielo_de_cebreros/home', changeLogo: 'elcielodecebreros', showButtonReturn: true),
       backgroundColor: CustomColors.frontColor,
+      floatingActionButton: IconButton(
+        onPressed: ()async{
+        
+        }, 
+        icon:const FaIcon(FontAwesomeIcons.circlePlus),
+        color:  CustomColors.pantone5615,
+        iconSize: 50,
+      ),
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20),
         alignment: Alignment.topCenter,
@@ -37,60 +45,24 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
               FadeInLeft(
                 duration: const Duration(milliseconds: 1500),
                 child:Text(
-                  "Preguntas o Halagos",
+                  "Servicios",
                   style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.center,
-                ),
-              ),
-               const SizedBox(height: 20),
-               Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 0, 10), 
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: CustomColors.frontColor,
-                     borderRadius: BorderRadius.circular(12), // Border radius de 20
-                  border: Border.all(
-                    color: CustomColors.backgroundColorDark, // Color del borde
-                    width: 1.0, // Ancho del borde
-                  ),
-                ),
-                child: DropdownButton<String>(
-                  value: selectionModel.searchStatus,
-                  underline: Container(),
-                  onChanged: (String? newValue) {
-                    if(newValue != null){
-                      selectionModel.updateSelectedOption(newValue);  
-                    }
-                  },
-                  items: ContactCebreterra.allStatus().map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: SizedBox(
-                        width:MediaQuery.of(context).size.width * 0.76,
-                        child: Text(
-                          showTranslateOfStatus(value),
-                          style:  Theme.of(context).textTheme.titleMedium,
-                          textAlign: TextAlign.start
-                        )
-                      ),
-                    );
-                  }).toList(),
                 ),
               ),
               const SizedBox(height: 10),
               Expanded(
                 child: SingleChildScrollView(
                   child: FutureBuilder(
-                    future:selectionModel.searchStatus == ContactCebreterra.allStatus()[0] ?ContactCebreterraController().getAll() : ContactCebreterraController().getAllContactForStatus(selectionModel.searchStatus),
+                    future:ServicesAppController().getAll(),
                     builder: (context, app){
                       if(app.connectionState == ConnectionState.done){
-                        List? allContacts = app.data;
-                        if(allContacts != null && allContacts.isNotEmpty){
+                        List? allServices = app.data;
+                        if(allServices != null && allServices.isNotEmpty){
                           return Wrap(
                            // spacing: 20,
                             runSpacing: 20,
-                            children:List.generate(allContacts.length, (index){
+                            children:List.generate(allServices.length, (index){
                               return  FadeInUp(
                                 duration: const Duration(milliseconds: 1500),
                                 child:  Card(
@@ -107,22 +79,37 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
                                     child:Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        SelectableText.rich(
-                                          TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text:'Comentario: ',
-                                                  style:  Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
-                                              ),
-                                              TextSpan(
-                                                text:allContacts[index].getComments() ?? 'Comentario',
-                                                style: Theme.of(context).textTheme.titleMedium,
-                                              ),
-                                            ]
+                                        SizedBox(
+                                          width:MediaQuery.of(context).size.width * 0.4,
+                                          child: ClipRRect(  
+                                            borderRadius:const BorderRadius.only(topLeft: Radius.circular(12), bottomLeft:  Radius.circular(12)),
+                                            child: Image.network(
+                                              allServices[index].getPhotosPath()[0],
+                                              fit: BoxFit.fitWidth, 
+                                              filterQuality:FilterQuality.high, 
+                                              width: MediaQuery.of(context).size.width,
+                                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                return Image.asset('assets/Niblogo.PNG', 
+                                                  fit: BoxFit.fitWidth, 
+                                                  filterQuality:FilterQuality.high, 
+                                                );
+                                              },
+                                              frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                                                return child;
+                                              },
+                                              loadingBuilder: (context, child, loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                } else {
+                                                  return Center(
+                                                    child: circularProgressIndicator(context),
+                                                  );
+                                                }
+                                              }
+                                            ),
                                           ),
-                                          textAlign: TextAlign.start,
                                         ),
-                                         Row(
+                                        Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             TextButton(
@@ -133,14 +120,15 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
                                                 ),
                                               ),
                                               onPressed: ()async{
-                                                showDetailsOfDoubts(allContacts[index]);
+                                                showDetailsOfDoubts(allServices[index]);
                                               },
                                             ),
                                             IconButton(
                                               onPressed: ()async{
-                                               showCircularLoadingDialog(context);
-                                                await ContactCebreterraController().deleteSpecificContact(allContacts[index]);
-                                                Navigator.of(context).pushNamedAndRemoveUntil('/cebreterra/contact', (route) => false);
+                                                showCircularLoadingDialog(context);
+                                                await ServicesAppController().deleteSpecificServices(allServices[index]);
+                                                Navigator.of(context).pushNamedAndRemoveUntil('/el_cielo_de_cebreros/services', (route) => false);
+                                              
                                               },
                                               icon: const FaIcon(FontAwesomeIcons.trash),
                                               color: CustomColors.kSecondaryColor,
@@ -158,7 +146,7 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
                       );
                     }
                     return Text(
-                      'No hay dudas ni comentarios de los usuarios',
+                      'No hay dudas servicios registrados',
                       style: Theme.of(context).textTheme.titleMedium,
                     
                     );
@@ -177,11 +165,11 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
 
   showTranslateOfStatus(String status){
     switch(status){
-      case ContactCebreterra.statusAprovatedANDShow:
+      case Contact.statusAprovatedANDShow:
       return 'Aprovados y mostrados';
-      case ContactCebreterra.statusCheck:
+      case Contact.statusCheck:
       return 'Respondido';
-      case ContactCebreterra.statusPending:
+      case Contact.statusPending:
       return 'Pendientes';
       default: 
       return 'Todos';
@@ -189,7 +177,7 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
   }
 
 
-  showDetailsOfDoubts(ContactCebreterra doubts)async{
+  showDetailsOfDoubts(Contact doubts)async{
     // buscar personId dele
     String? newStatus = doubts.getStatus()!;
     await showDialog(
@@ -263,10 +251,10 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
                   ),
                   RadioListTile<String>(
                     title: Text(
-                      showTranslateOfStatus(ContactCebreterra.statusAprovatedANDShow),
+                      showTranslateOfStatus(Contact.statusAprovatedANDShow),
                       style:Theme.of(context).textTheme.titleSmall!.copyWith(),
                     ),
-                    value: ContactCebreterra.statusAprovatedANDShow,
+                    value: Contact.statusAprovatedANDShow,
                     groupValue: newStatus,
                     onChanged: (value) {
                       setState(() {
@@ -275,10 +263,10 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
                     },
                   ),
                   RadioListTile<String>(
-                    title: Text(showTranslateOfStatus( ContactCebreterra.statusCheck),
+                    title: Text(showTranslateOfStatus( Contact.statusCheck),
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(),
                     ),
-                    value: ContactCebreterra.statusCheck,
+                    value: Contact.statusCheck,
                     groupValue: newStatus,
                     onChanged: (value) {
                       setState(() {
@@ -287,10 +275,10 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
                     },
                   ),
                   RadioListTile<String>(
-                    title:Text(showTranslateOfStatus( ContactCebreterra.statusPending),
+                    title:Text(showTranslateOfStatus( Contact.statusPending),
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(),
                     ),
-                    value:ContactCebreterra.statusPending,
+                    value:Contact.statusPending,
                     groupValue: newStatus,
                     onChanged: (value) {
                       setState(() {
@@ -304,7 +292,7 @@ class ContactCebreterraScreenState extends State<ContactCebreterraScreen> {
                         onPressed: () async{
                           doubts.setStatus(newStatus);
                           showCircularLoadingDialog(context);
-                          Map<String, dynamic>response = await ContactCebreterraController().registerOrEditContact(doubts);
+                          Map<String, dynamic>response = await ContactController().registerOrEditContact(doubts);
                           if(response['success'] == false){
                             Navigator.of(context).pop();
                             showMessageErrorServer(context,  errorServer:response['errorCode'],  onPressed:(){

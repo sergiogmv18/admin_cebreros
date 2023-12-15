@@ -49,7 +49,7 @@ class HomeCebreterraScreenState extends State<HomeCebreterraScreen> {
                   spacing: 10,
                   children: [
                 //CONTACTO
-                    buttonMenu(context, title: 'Preguntas o Alagos', route: '/cebreterra/contact'),
+                    buttonMenu(context, title: 'Preguntas o Halagos', route: '/cebreterra/contact'),
                 // BOOKING
                     buttonMenu(context, title: 'Productos', route: '/cebreterra/products', width: MediaQuery.of(context).size.width*0.37),
                 // Product    

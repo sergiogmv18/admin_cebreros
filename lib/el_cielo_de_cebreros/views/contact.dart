@@ -37,7 +37,7 @@ class ContactElCieloDeCebrerosScreenState extends State<ContactElCieloDeCebreros
               FadeInLeft(
                 duration: const Duration(milliseconds: 1500),
                 child:Text(
-                  "Preguntas o Alagos",
+                  "Preguntas o Halagos",
                   style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
