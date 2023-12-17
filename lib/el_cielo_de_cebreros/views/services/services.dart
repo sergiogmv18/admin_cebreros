@@ -4,12 +4,11 @@ import 'package:admin_cebre/el_cielo_de_cebreros/controllers/contact_controller.
 import 'package:admin_cebre/el_cielo_de_cebreros/controllers/services_controller.dart';
 import 'package:admin_cebre/el_cielo_de_cebreros/models/contact.dart';
 import 'package:admin_cebre/components/circular_loading.dart';
+import 'package:admin_cebre/el_cielo_de_cebreros/views/services/register_services_screen.dart';
 import 'package:admin_cebre/style.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-
 class ServicesElCieloDeCebrerosScreen extends StatefulWidget {
   const ServicesElCieloDeCebrerosScreen({super.key});
   @override
@@ -28,7 +27,7 @@ class ServicesElCieloDeCebrerosScreenState extends State<ServicesElCieloDeCebrer
       backgroundColor: CustomColors.frontColor,
       floatingActionButton: IconButton(
         onPressed: ()async{
-        
+        registerOrEditService(context);
         }, 
         icon:const FaIcon(FontAwesomeIcons.circlePlus),
         color:  CustomColors.pantone5615,
@@ -80,11 +79,11 @@ class ServicesElCieloDeCebrerosScreenState extends State<ServicesElCieloDeCebrer
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          width:MediaQuery.of(context).size.width * 0.4,
+                                          width:MediaQuery.of(context).size.width,
                                           child: ClipRRect(  
                                             borderRadius:const BorderRadius.only(topLeft: Radius.circular(12), bottomLeft:  Radius.circular(12)),
                                             child: Image.network(
-                                              allServices[index].getPhotosPath()[0],
+                                              allServices[index].getPhotoBase64(),
                                               fit: BoxFit.fitWidth, 
                                               filterQuality:FilterQuality.high, 
                                               width: MediaQuery.of(context).size.width,
@@ -110,19 +109,21 @@ class ServicesElCieloDeCebrerosScreenState extends State<ServicesElCieloDeCebrer
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
+                                            /*
                                             TextButton(
-                                              child: Text('ver mas',
+                                              child: Text('Editar',
                                                 style:Theme.of(context).textTheme.titleMedium!.copyWith( 
                                                   decorationColor: Colors.black,         // Color del subrayado
                                                   decorationThickness: 1.5,decoration: TextDecoration.underline,
                                                 ),
                                               ),
                                               onPressed: ()async{
-                                                showDetailsOfDoubts(allServices[index]);
+                                                  registerOrEditService(context, serviceApp: allServices[index]);
                                               },
                                             ),
+                                            */
                                             IconButton(
                                               onPressed: ()async{
                                                 showCircularLoadingDialog(context);

@@ -1,13 +1,13 @@
 import 'package:admin_cebre/model/model_base.dart';
 
 class ServiceApp  extends ModelBase{
-  String? name;
+  String? nameFile;
   String? photoBase64;
-  ServiceApp({int? serverId, this.name, this.photoBase64}): super(serverId: serverId);
+  ServiceApp({int? serverId, this.nameFile, this.photoBase64}): super(serverId: serverId);
 
   //Gets
-  String? getName(){
-    return name;
+  String? getNameFile(){
+    return nameFile;
   }
 
   String? getPhotoBase64(){
@@ -16,8 +16,8 @@ class ServiceApp  extends ModelBase{
 
 
   //SETs
-  void setName(String name){
-    this.name = name;
+  void setName(String nameFile){
+    this.nameFile = nameFile;
   }
   
   void setPhotoBase64(String? photoBase64){
@@ -28,7 +28,7 @@ class ServiceApp  extends ModelBase{
   Map<String, dynamic> toMap() {
     return {
       'serverId':serverId,
-      'name':name,
+      'nameFile':nameFile,
       'photoId':photoBase64,
     };
   }

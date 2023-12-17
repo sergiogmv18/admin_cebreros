@@ -11,16 +11,22 @@ class ServicesAppController{
   * @version 1.0 - 20230215 - initial release
   * @return  <Map<String, dynamic>>
   */
-  Future<Map<String, dynamic>> registerOrEditService(ServiceApp servicesWk)async{
+  Future<Map<String, dynamic>> registerOrEditService(ServiceApp servicesWk, {Map? dataOfImg, bool isEditPhoto = false})async{
     Map<String, dynamic> response = {};
     Map<String, dynamic> parameters = {
-      'action':'registerOrEditServices',
-      'name': servicesWk.getName(),
+      'action':'registerOrEditService',
+      'nameFile': servicesWk.getNameFile(),
       'photo64': servicesWk.getPhotoBase64(),
     };
-
     if(servicesWk.getServerId() != null){
       parameters['id'] = servicesWk.getServerId().toString();
+    }
+    if(dataOfImg != null){
+      parameters['imgBase64'] = dataOfImg['base64String'];
+      parameters['extension'] = dataOfImg['extension'];
+    }
+    if(isEditPhoto){
+      parameters['isEditPhoto'] = 'true';
     }
     response = await RequestHttp().httpPost(parameters: parameters,server: RequestHttp.serverElCieloDeCebreros);
     return response;
@@ -57,7 +63,7 @@ class ServicesAppController{
     List allServices = [];
     if(data.isNotEmpty){
       for(int c = 0; c < data.length; c++){
-        ServiceApp servicesWk = ServiceApp(serverId:int.parse(data[c][0].toString()), name:data[c][1].toString(), photoBase64:data[c][3].toString());
+        ServiceApp servicesWk = ServiceApp(serverId:int.parse(data[c][0].toString()), nameFile:data[c][1].toString(), photoBase64:'https://cielodecebreros.com/storade/services/${data[c][1].toString()}');
         allServices.add(servicesWk);
       }
     }
@@ -73,8 +79,9 @@ class ServicesAppController{
   */
   Future<bool>deleteSpecificServices(ServiceApp serviceWk)async{
      Map<String, dynamic> parameters = {
-      'action': 'deleteServices',
+      'action': 'deleteService',
       'id': serviceWk.getServerId().toString(),
+      'nameFile': serviceWk.getNameFile(),
     };
     Map<String, dynamic> response = await RequestHttp().httpPost(parameters: parameters,server: RequestHttp.serverElCieloDeCebreros);
     return response['success'];
