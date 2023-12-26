@@ -18,7 +18,7 @@ class ProductsScreen extends StatelessWidget {
       backgroundColor: CustomColors.frontColor,
       floatingActionButton: IconButton(
         onPressed: ()async{
-        
+          Navigator.of(context).pushNamedAndRemoveUntil('cebreterra/register/product', (route) => false);    
         }, 
         icon:const FaIcon(FontAwesomeIcons.circlePlus),
         color:  CustomColors.pantone5615,

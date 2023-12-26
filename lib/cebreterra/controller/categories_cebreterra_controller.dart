@@ -10,8 +10,8 @@ class CategoryCebreterraController{
   * @version 1.0 - 20230215 - initial release
   * @return  <List>
   */
-  Future<List> convertStringInObjCategories({required List data})async{
-    List allCategories = [];
+  Future<List<CategoryCebreterra>> convertStringInObjCategories({required List data})async{
+    List<CategoryCebreterra> allCategories = [];
     if(data.isNotEmpty){
       for(int c = 0; c < data.length; c++){
         CategoryCebreterra categoryWk = CategoryCebreterra(serverId:int.parse(data[c][0].toString()), name:data[c][1].toString());
@@ -28,8 +28,8 @@ class CategoryCebreterraController{
   * @version 1.0 - 20230215 - initial release
   * @return  all event saved
   */
-  Future<List> getAllCategories() async{
-    List allContacts = [];
+  Future<List<CategoryCebreterra>> getAllCategories() async{
+    List<CategoryCebreterra> allContacts = [];
     Map<String, dynamic> parameters = {
       'action': 'getAllCategories',
     };

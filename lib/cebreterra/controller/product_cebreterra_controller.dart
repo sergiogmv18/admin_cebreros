@@ -1,4 +1,5 @@
 import 'package:admin_cebre/cebreterra/models/category_cebereterra.dart';
+import 'package:admin_cebre/cebreterra/models/product_cebreterra.dart';
 import 'package:admin_cebre/services/request.dart';
 
 class ProductCebreterraController{
@@ -66,15 +67,15 @@ class ProductCebreterraController{
   * @version 1.0 - 20230215 - initial release
   * @return  <Map<String, dynamic>>
   */
-  Future<Map<String, dynamic>> registerOrEditCategory(CategoryCebreterra categoryCebreterra)async{
+  Future<Map<String, dynamic>> registerOrEditProducts(ProductCebreterra productCebreterraWk)async{
     Map<String, dynamic> response = {};
     Map<String, dynamic> parameters = {
-      'action':'registerOrEditCategory',
-      'name': categoryCebreterra.getName(),
+      'action':'registerOrEditProduct',
+      'name': productCebreterraWk.getName(),
     };
 
-    if(categoryCebreterra.getServerId() != null){
-      parameters['id'] = categoryCebreterra.getServerId().toString();
+    if(productCebreterraWk.getServerId() != null){
+      parameters['id'] = productCebreterraWk.getServerId().toString();
     }
     response = await RequestHttp().httpPost(parameters: parameters,server: RequestHttp.serverCebreterra);
     return response;
