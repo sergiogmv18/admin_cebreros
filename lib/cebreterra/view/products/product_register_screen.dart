@@ -1,10 +1,7 @@
 import 'dart:convert';
-
 import 'package:admin_cebre/cebreterra/controller/categories_cebreterra_controller.dart';
-import 'package:admin_cebre/cebreterra/controller/contact_cebreterra_controller.dart';
 import 'package:admin_cebre/cebreterra/controller/product_cebreterra_controller.dart';
 import 'package:admin_cebre/cebreterra/models/category_cebereterra.dart';
-import 'package:admin_cebre/cebreterra/models/contact.dart';
 import 'package:admin_cebre/cebreterra/models/product_cebreterra.dart';
 import 'package:admin_cebre/components/add_documents.dart';
 import 'package:admin_cebre/components/alert.dart';
@@ -12,12 +9,12 @@ import 'package:admin_cebre/components/app_bar_custom.dart';
 import 'package:admin_cebre/components/butom_custom.dart';
 import 'package:admin_cebre/components/circular_loading.dart';
 import 'package:admin_cebre/components/text_form_fields.dart';
+import 'package:admin_cebre/helpers/functions_class.dart';
 import 'package:admin_cebre/style.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 
 class ProductInsertScreen extends StatefulWidget {
   final Map? data;
@@ -31,6 +28,7 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
   bool showProccessLoad = true;
   final formKey = GlobalKey<FormState>();
   List<CategoryCebreterra>? allCategories = [];
+  CategoryCebreterra? categoryCebreterraSelected;
   List allPhotos = [];
     @override
   void initState() {
@@ -54,7 +52,7 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarCustom(context, route: '/cebreterra/home', changeLogo: 'cebreterra', showButtonReturn: true),
+      appBar: appBarCustom(context, route: '/cebreterra/products', changeLogo: 'cebreterra', showButtonReturn: true),
       backgroundColor: CustomColors.frontColor,
       body:showProccessLoad? circularProgressIndicator(context): Container(
         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -135,11 +133,15 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
                               ),
                             ),
                             child: DropdownButton<CategoryCebreterra>(
-                              value: allCategories![0],
+                              value:categoryCebreterraSelected ?? allCategories![0],
                               underline: Container(),
                               onChanged: (CategoryCebreterra? newValue) {
                                 if(newValue != null){
-                                  productCebreterraWk.setCategoryId(newValue.getServerId()); 
+                                  setState(() {
+                                    categoryCebreterraSelected = newValue;
+                                    productCebreterraWk.setCategoryId(newValue.getServerId()); 
+                                  });
+                                 
                                 }
                               },
                               items:allCategories!.map<DropdownMenuItem<CategoryCebreterra>>((CategoryCebreterra value) {
@@ -193,9 +195,9 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
                           },
                           onChanged: (text) {
                             if (text.trim().isEmpty) {
-                              productCebreterraWk.setPrice(null);
+                              productCebreterraWk.setheigh(null);
                             } else {
-                              productCebreterraWk.setPrice(text);
+                              productCebreterraWk.setheigh(text);
                             }
                           },
                         ),
@@ -233,9 +235,9 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
                           },
                           onChanged: (text) {
                             if (text.trim().isEmpty) {
-                              productCebreterraWk.setWidth(null);
+                              productCebreterraWk.setWeight(null);
                             } else {
-                              productCebreterraWk.setWidth(text);
+                              productCebreterraWk.setWeight(text);
                             }
                           },
                         ),
@@ -244,23 +246,43 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
                           onPressed: () async{
                             List? photos = await addFilesPicker(context, returnValue: true,allowMultiple: true);
                             if(photos != null && photos.isNotEmpty){
-                              setState(() {
-                                allPhotos = photos;
-                              //  imgBase64 = photos[0]['base64String'];
-                              //  extension = photos[0]['extension'];
-                              //  dataOfImg = photos[0];
-                                
-                              //  showBase64 = true;
-                              });
-                             // serviceWk.setPhotoBase64(imgBase64!);
+                              if(allPhotos.isNotEmpty){
+                                for(Map specificPhoto in photos){
+                                 bool isAlreadySaved = ProductCebreterraController.checkAndSave(base64String:specificPhoto['base64String'], list:allPhotos);
+                                    if(!isAlreadySaved){
+                                      String generatedNamePhoto = FunctionClass().generateRandomNumber(); 
+                                      specificPhoto['nameFile'] = generatedNamePhoto;
+                                      setState(() {
+                                        allPhotos.add({'nameFile':specificPhoto['nameFile'],'extension':specificPhoto['extension'], 'imgBase64':specificPhoto['base64String']},);
+                                //  imgBase64 = photos[0]['base64String'];
+                                //  extension = photos[0]['extension'];
+                                //  dataOfImg = photos[0];
+                                //  showBase64 = true;
+                                    });
+                                  }  
+                                }
+                              }else{
+                                for(Map specificPhoto in photos){
+                                  String generatedNamePhoto = FunctionClass().generateRandomNumber(); 
+                                  specificPhoto['nameFile'] = generatedNamePhoto;
+                                  setState(() {
+                                   allPhotos.add({ 'nameFile':specificPhoto['nameFile'],'extension':specificPhoto['extension'],'imgBase64':specificPhoto['base64String']});
+                                //  imgBase64 = photos[0]['base64String'];
+                                //  extension = photos[0]['extension'];
+                                //  dataOfImg = photos[0];
+                                //  showBase64 = true;
+                                  });
+                                }
+                              }   
                             }
                           },
                           icon: const FaIcon(FontAwesomeIcons.camera),
-                          color: CustomColors.pantone720,
+                          color: CustomColors.activeButtonColor,
                           iconSize: 40,
                         ),
+                        
                         Container(
-                          height: 200,
+                          height:allPhotos.isEmpty ? 0 : 200,
                           child: SingleChildScrollView(
                             scrollDirection:Axis.horizontal,
                             child: Row(
@@ -271,7 +293,7 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
                                     child:Column(
                                       children: [
                                         Image.memory(
-                                          showContainerImg(allPhotos[photo]['base64String']),
+                                          showContainerImg(allPhotos[photo]['imgBase64']),
                                           height: 140,
                                           fit: BoxFit.fitHeight, 
                                         ),
@@ -309,7 +331,8 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
                             context,
                             title: 'Guardar',
                             onPressed: () async{
-                              if (formKey.currentState!.validate()) {
+                              if (formKey.currentState!.validate() && allPhotos.isNotEmpty) {
+                                productCebreterraWk.setPhotosPath(allPhotos);
                                 showCircularLoadingDialog(context);
                                 Map<String, dynamic>response = await ProductCebreterraController().registerOrEditProducts(productCebreterraWk);
                                 if(response['success'] == false){
@@ -322,7 +345,7 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
                                   );
                                   return;
                                 }
-                                  Navigator.of(context).pushNamedAndRemoveUntil('/cebreterra/categoria', (route) => false);
+                                  Navigator.of(context).pushNamedAndRemoveUntil('/cebreterra/products', (route) => false);
                               }
                             },
                           )

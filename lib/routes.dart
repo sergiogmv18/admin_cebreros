@@ -1,6 +1,8 @@
+import 'package:admin_cebre/cebreterra/models/product_cebreterra.dart';
 import 'package:admin_cebre/cebreterra/view/category/categories_screen.dart';
 import 'package:admin_cebre/cebreterra/view/contacts_screen.dart';
 import 'package:admin_cebre/cebreterra/view/home_cebreterra_screen.dart';
+import 'package:admin_cebre/cebreterra/view/products/details_screen.dart';
 import 'package:admin_cebre/cebreterra/view/products/product_register_screen.dart';
 import 'package:admin_cebre/cebreterra/view/products/products_screen.dart';
 import 'package:admin_cebre/el_cielo_de_cebreros/views/contact.dart';
@@ -25,6 +27,7 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   '/cebreterra/products': (BuildContext context) => const ProductsScreen(),
   '/cebreterra/categoria': (BuildContext context) => const CategoryebreterraScreen(),
   'cebreterra/register/product' : (BuildContext context) => ProductInsertScreen( data: ModalRoute.of(context)!.settings.arguments as Map?),  
+  'cebreterra/details/product': (BuildContext context) => ProductDetailsScreen( productWk: ModalRoute.of(context)!.settings.arguments as ProductCebreterra),  
   //'/login':(BuildContext context) => LoginScreen(data: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?), 
   //'/form/data/finalUser' : (BuildContext context) => FormDataFinalUserScreen( data: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?), 
 };

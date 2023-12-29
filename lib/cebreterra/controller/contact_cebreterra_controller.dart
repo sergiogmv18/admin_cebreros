@@ -76,13 +76,11 @@ class ContactCebreterraController extends ChangeNotifier {
   * @return  <Map<String, dynamic>>
   */
   Future<bool>deleteSpecificContact(ContactCebreterra contact)async{
-     Map<String, dynamic> parameters = {
+    Map<String, dynamic> parameters = {
       'action': 'deleteContact',
       'id': contact.getServerId().toString(),
-       };
-        print(parameters);
+    };
     Map<String, dynamic> response = await RequestHttp().httpPost(parameters: parameters,server: RequestHttp.serverCebreterra);
-    print(response);
     return response['success'];
   } 
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
@@ -94,7 +93,7 @@ class RequestHttp {
         }
       }
     } catch (e) {
-      log(e.toString());
+    //  log(e.toString());
       if (e is SocketException) {
         result = {
           'success': false,

@@ -1,291 +1,239 @@
+import 'package:admin_cebre/cebreterra/controller/categories_cebreterra_controller.dart';
+import 'package:admin_cebre/cebreterra/models/category_cebereterra.dart';
+import 'package:admin_cebre/cebreterra/models/product_cebreterra.dart';
+import 'package:admin_cebre/cebreterra/view/products/products_screen.dart';
+import 'package:admin_cebre/components/app_bar_custom.dart';
+import 'package:admin_cebre/components/butom_custom.dart';
+import 'package:admin_cebre/components/circular_loading.dart';
+import 'package:admin_cebre/style.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:admin_cebre/const/constants.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../const/clipper.dart';
-
-class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key});
+class ProductDetailsScreen extends StatefulWidget {
+  final ProductCebreterra productWk;
+  const ProductDetailsScreen({super.key, required this.productWk});
+  @override
+   ProductDetailsScreenState createState() => ProductDetailsScreenState();
+}
+class ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  ProductCebreterra productWk = ProductCebreterra();
+    int _current = 0;
+  final CarouselController _controller = CarouselController();
+  @override
+  void initState() {
+    productWk = widget.productWk;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBarCustom(context, route: '/cebreterra/products', changeLogo: 'cebreterra', showButtonReturn: true),
+      backgroundColor: CustomColors.frontColor,
       body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Color(0xFFF5F4EF),
-          image: DecorationImage(
-            image: AssetImage("assets/images/ux_big.png"),
-            alignment: Alignment.topRight,
-          ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  left: 20,
-                  top: MediaQuery.of(context).size.height * 0.04,
-                  right: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.keyboard_arrow_left_outlined),
-                          iconSize: 35),
-                      SvgPicture.asset("assets/icons/more-vertical.svg"),
+        padding: const EdgeInsets.only(top: 20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              StatefulBuilder(builder:(BuildContext context, StateSetter setState) {
+                return ZoomIn(
+                  child: Column(
+                  children: [
+                    CarouselSlider(
+                      items:productWk.getPhotosPath()!.map((item) => Image.network(
+                        'https://cebreterra.com/storade/product/$item',
+                        filterQuality: FilterQuality.high, 
+                        fit: BoxFit.cover, 
+                        width:MediaQuery.of(context).size.width * 0.9, 
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                          return Image.asset('assets/images/loading.gif', 
+                            fit: BoxFit.fitWidth, 
+                            filterQuality:FilterQuality.high, 
+                          );
+                        },
+                        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                          return child;
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Center(
+                              child: circularProgressIndicator(context),
+                            );
+                          }
+                        }
+                      )).toList(),
+                      carouselController: _controller,
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        enlargeCenterPage: true,
+                        aspectRatio: 2.0,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        }),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: productWk.getPhotosPath()!.asMap().entries.map((entry) {
+                          return GestureDetector(
+                            onTap: () => _controller.animateToPage(entry.key),
+                            child: Container(
+                              width: 18.0,
+                              height: 18.0,
+                              margin:const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black).withOpacity(_current == entry.key ? 0.9 : 0.4)
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ],
-                  ),
-                  const SizedBox(height: 30),
-                  BounceInLeft(
-                    child: ClipPath(
-                      clipper: BestSellerClipper(),
+                  )
+                );
+              }),
+              Container(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child:Column(
+                  children: [
+// NAME PRODUCT
+                    FadeInLeft(
+                      child:Text(
+                        productWk.getName()!, 
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
+                      )
+                    ),
+                    const SizedBox(height: 10),
+// DESCRIPTION PRODUCT
+                    FadeInLeft(
+                      child:Text(
+                        productWk.getDescription()!, 
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      )
+                    ),
+// DIMENSIONES       
+                    FlipInX(
+                      delay: const Duration(milliseconds: 700),
                       child: Container(
-                        color: Colors.amber,
-                        padding: const EdgeInsets.only(
-                            left: 10, top: 5, right: 20, bottom: 5),
-                        child: Text(
-                          "BestSeller".toUpperCase(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ZoomIn(
-                    child: Text(
-                      "Design Thinking",
-                      style: kHeadingextStyle.copyWith(fontSize: 24),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  FadeInLeft(
-                    delay: const Duration(milliseconds: 300),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset("assets/icons/person.svg"),
-                        const SizedBox(width: 5),
-                        const Text(
-                          "18K",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(width: 20),
-                        SvgPicture.asset("assets/icons/star.svg"),
-                        const SizedBox(width: 5),
-                        const Text(
-                          "4.8",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  FlipInX(
-                    delay: const Duration(milliseconds: 700),
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: "\$50 ",
-                              style: kSubheadingextStyle.copyWith(
-                                  color: Colors.black,
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.bold)),
-                          const TextSpan(
-                            text: "\$70",
-                            style: TextStyle(
-                              color: Color(0xFF61688B),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              decoration: TextDecoration.lineThrough,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.16),
-            Expanded(
-              child: FadeInUp(
-                delay: const Duration(milliseconds: 700),
-                child: Card(
-                  elevation: 20,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.white,
-                    ),
-                    child: Stack(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Course Content",
-                                style: kTitleTextStyle,
+                        alignment: Alignment.centerLeft,
+                        child: RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          children: [
+// CATEGORIES
+                            if(productWk.getCategoryId() != null)...[
+                              TextSpan(
+                                text: "Categoria:",
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 30),
-                              CourseContent(
-                                number: "01",
-                                duration: 5.35,
-                                title: "Welcome to the Course",
-                                isDone: true,
+                              WidgetSpan(
+                                child: FutureBuilder(
+                                  future:CategoryCebreterraController().getSpecificCategory(productWk.getCategoryId()!),
+                                  builder: (context, app){
+                                    if(app.connectionState == ConnectionState.done){
+                                      CategoryCebreterra? category = app.data;
+                                      if(category != null){
+                                        return  Text(
+                                          category.getName()!,
+                                          style: Theme.of(context).textTheme.titleMedium,
+                                        );
+                                      }
+                                      return Text(
+                                        'No definida',
+                                        style: Theme.of(context).textTheme.titleMedium,
+                                      );
+                                  }
+                                  return circularProgressIndicator(context);
+                                  }
+                                ),
                               ),
-                              CourseContent(
-                                number: '02',
-                                duration: 19.04,
-                                title: "Design Thinking - Intro",
-                                isDone: true,
-                              ),
-                              CourseContent(
-                                number: '03',
-                                duration: 15.35,
-                                title: "Design Thinking Process",
-                              ),
-                              CourseContent(
-                                number: '04',
-                                duration: 5.35,
-                                title: "Customer Perspective",
-                              ),
+                              const TextSpan(
+                                text: "\n",
+                              )
                             ],
-                          ),
+// HEIGHT 
+                            if(productWk.getHeight() != null && productWk.getHeight()!.isNotEmpty && productWk.getHeight() != '0')...[
+                              TextSpan(
+                                text: "Altura:",
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: "${productWk.getHeight()}cm \n",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              )
+                            ],
+// WIDTH                     
+                            if(productWk.getWidth() != null && productWk.getWidth()!.isNotEmpty && productWk.getWidth() != '0')...[
+                              TextSpan(
+                                text: "Largura:",
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: "${productWk.getWidth()}cm \n",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              )
+                            ],
+// WEIGHT        
+                            if(productWk.getWeight() != null && productWk.getWeight()!.isNotEmpty && productWk.getWeight() != '0')...[
+                              TextSpan(
+                                text: "Peso:",
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: "${productWk.getWeight()}kg  \n",
+                                style: Theme.of(context).textTheme.titleMedium,
+                              )
+                            ] 
+                          ],
                         ),
-                        Positioned(
-                          right: 0,
-                          left: 0,
-                          bottom: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            height: 100,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(40),
-                              boxShadow: const [
-                                BoxShadow(
-                                  offset: Offset(0, 4),
-                                  blurRadius: 50,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                FadeInLeft(
-                                  delay: const Duration(milliseconds: 1300),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(14),
-                                    height: 56,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFFFEDEE),
-                                      borderRadius: BorderRadius.circular(40),
-                                    ),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/shopping-bag.svg"),
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: BounceInUp(
-                                    delay: const Duration(milliseconds: 1300),
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 56,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(40),
-                                        color: Colors.amber,
-                                      ),
-                                      child: const Text(
-                                        "Buy Now",
-                                        style: kTitleTextStyle,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
+                      )
                     ),
-                  ),
+                    FadeInUp(
+                      delay: const Duration(milliseconds: 700),
+                      child: Text(
+                        '€${productWk.getPrice()}',
+                        style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: CustomColors.activeButtonColor),
+                      )
+                    ),
+                  ],
                 ),
+              ),   
+              const SizedBox(height:20),
+// ACTIONS
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                      buttonCustom(
+                context,
+                title: 'Editar',
+                onPressed: () {
+                },
+                bacgroundColor: CustomColors.activeButtonColor 
               ),
-            ),
-          ],
+              buttonCustom(
+                context,
+                title: 'Eliminar',
+                onPressed: ()async {
+                deleteProduct(context, productCebreterraWk:productWk);
+                },
+                bacgroundColor: CustomColors.cancelActionButtonColor 
+              )
+                ],
+              ) 
+            ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-class CourseContent extends StatelessWidget {
-  final String number;
-  final double duration;
-  final String title;
-  final bool isDone;
-  const CourseContent({
-    Key? key,
-    required this.number,
-    required this.duration,
-    required this.title,
-    this.isDone = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
-      child: Row(
-        children: <Widget>[
-          Text(
-            number,
-            style: kHeadingextStyle,
-          ),
-          const SizedBox(width: 15),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "$duration mins\n",
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 16,
-                  ),
-                ),
-                TextSpan(
-                    text: title,
-                    style: kSubtitleTextSyule.copyWith(
-                        fontWeight: FontWeight.w500)),
-              ],
-            ),
-          ),
-          const Spacer(),
-          Container(
-            margin: const EdgeInsets.only(left: 20),
-            height: 40,
-            width: 40,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.amber,
-            ),
-            child: const Icon(Icons.play_arrow, color: Colors.white),
-          )
-        ],
       ),
     );
   }

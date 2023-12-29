@@ -34,7 +34,6 @@ class CategoryCebreterraController{
       'action': 'getAllCategories',
     };
     Map<String, dynamic> response = await RequestHttp().httpPost(parameters: parameters, server: RequestHttp.serverCebreterra);
-    print(response);
     if(response['success']){
       allContacts = await convertStringInObjCategories(data: response['payload']);
     }
@@ -53,9 +52,7 @@ class CategoryCebreterraController{
       'action': 'deleteCategory',
       'id': category.getServerId().toString(),
     };
-        print(parameters);
     Map<String, dynamic> response = await RequestHttp().httpPost(parameters: parameters,server: RequestHttp.serverCebreterra);
-    print(response);
     return response['success'];
   } 
 
@@ -81,4 +78,13 @@ class CategoryCebreterraController{
     return response;
   }
 
+
+  Future getSpecificCategory(int serverId)async{
+    List allCategories = await getAllCategories();
+    for(CategoryCebreterra category in allCategories){
+      if(category.getServerId() == serverId){
+        return category;
+      }
+    }
+  }
 }

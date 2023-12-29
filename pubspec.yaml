@@ -44,6 +44,7 @@ dependencies:
   file_picker: ^5.5.0
   flutter_staggered_grid_view:
   animate_do: ^3.1.2
+  carousel_slider: ^4.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -58,7 +59,7 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 flutter_icons:
-  image_path: "assets/images/logo_App.jpg"
+  image_path: "assets/images/logo.jpg"
   #adaptive_icon_foreground: "assets/mr_Coolz.jpg"
   android: true
   ios: true
