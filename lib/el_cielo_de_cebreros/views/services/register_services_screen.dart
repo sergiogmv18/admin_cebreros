@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:admin_cebre/components/add_documents.dart';
 import 'package:admin_cebre/components/alert.dart';
 import 'package:admin_cebre/components/butom_custom.dart';
@@ -9,7 +8,6 @@ import 'package:admin_cebre/helpers/functions_class.dart';
 import 'package:admin_cebre/style.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RegisterServicesAppScreen extends StatefulWidget {
@@ -67,7 +65,7 @@ class _RegisterServicesAppScreenState extends State<RegisterServicesAppScreen> {
                 const SizedBox(height: 30),
                 if(showBase64)...[
                     Image.memory(
-                      showContainerImg(imgBase64!), 
+                     FunctionClass.showContainerImg(imgBase64!), 
                       width:MediaQuery.of(context).size.width,   
                       fit: BoxFit.fitWidth, 
                     ),
@@ -181,21 +179,7 @@ class _RegisterServicesAppScreenState extends State<RegisterServicesAppScreen> {
         ],
       )
     );
-  }
-
-
-  /*
- * Convert base64 to bytes and return or value for show imagen of event
- * @author  SGV             - 20231019
- * @version 1.0             - 20231019 - initial release
- * @param   <String>  - img  - image in format base64                                               
- * @return  <widget>  widget 
- */
-  showContainerImg(String img){
-    Uint8List bytes = base64Decode(img);
-    return bytes;
-  }
-  
+  }  
 }
 
 

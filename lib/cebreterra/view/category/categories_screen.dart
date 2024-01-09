@@ -73,41 +73,78 @@ class CategoryebreterraScreenState extends State<CategoryebreterraScreen> {
                                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                     transformAlignment: Alignment.center,
                                     width:MediaQuery.of(context).size.width,
-                                    child:Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                    child:Row(
+                                      //crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                       Text(
-                                          allCategories[index].getName(),
-                                          style:  Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
-                                        ),
-                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            TextButton(
-                                              child: Text('ver mas',
-                                                style:Theme.of(context).textTheme.titleMedium!.copyWith( 
-                                                  decorationColor: Colors.black,         // Color del subrayado
-                                                  decorationThickness: 1.5,decoration: TextDecoration.underline,
-                                                ),
-                                              ),
-                                              onPressed: ()async{
-                                               registerOrEditCategory(context,category:allCategories[index]);
+                                        SizedBox(
+                                          width:MediaQuery.of(context).size.width * 0.3,
+                                          child: ClipRRect(  
+                                            borderRadius:const BorderRadius.only(topLeft: Radius.circular(12), topRight:  Radius.circular(12)),
+                                            child: Image.network(
+                                              allCategories[index].getPhotoPath() != null ? 'https://cebreterra.com/storade/categories/${allCategories[index].getPhotoPath()}' : '',
+                                              filterQuality:FilterQuality.high, 
+                                              width:MediaQuery.of(context).size.width,
+                                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                return Image.asset(
+                                                  'assets/images/banner.png', 
+                                                  width:MediaQuery.of(context).size.width,
+                                                  filterQuality:FilterQuality.high,
+                                                  fit: BoxFit.fitWidth, 
+                                                );
                                               },
+                                              frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                                                return child;
+                                              },
+                                              loadingBuilder: (context, child, loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                } else {
+                                                  return Center(
+                                                    child: circularProgressIndicator(context),
+                                                  );
+                                                }
+                                              }
                                             ),
-                                            IconButton(
-                                              onPressed: ()async{
-                                                showCircularLoadingDialog(context);
-                                                await CategoryCebreterraController().deleteSpecificCategory(allCategories[index]);
-                                                Navigator.of(context).pushNamedAndRemoveUntil('/cebreterra/categoria', (route) => false);
-                                              
-                                              },
-                                              icon: const FaIcon(FontAwesomeIcons.trash),
-                                              color: CustomColors.kSecondaryColor,
-                                              iconSize: 30,
-                                            ) 
-                                          ], 
+                                          ),
                                         ),
-                                      
+                                        SizedBox(
+                                          width:MediaQuery.of(context).size.width * 0.51,
+                                          child:Column(
+                                            children: [
+                                              Text(
+                                                allCategories[index].getName(),
+                                                style:  Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  TextButton(
+                                                    child: Text('ver mas',
+                                                      style:Theme.of(context).textTheme.titleMedium!.copyWith( 
+                                                        decorationColor: Colors.black,         // Color del subrayado
+                                                        decorationThickness: 1.5,decoration: TextDecoration.underline,
+                                                      ),
+                                                    ),
+                                                    onPressed: ()async{
+                                                      registerOrEditCategory(context, category:allCategories[index]);
+                                                    },
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: ()async{
+                                                      showCircularLoadingDialog(context);
+                                                      await CategoryCebreterraController().deleteSpecificCategory(allCategories[index]);
+                                                      Navigator.of(context).pushNamedAndRemoveUntil('/cebreterra/categoria', (route) => false);
+                                                    },
+                                                    icon: const FaIcon(FontAwesomeIcons.trash),
+                                                    color: CustomColors.kSecondaryColor,
+                                                    iconSize: 30,
+                                                  ) 
+                                                ], 
+                                              ),
+                                            ],
+                                          )
+                                         ),
                                       ],
                                     )
                                   ),
