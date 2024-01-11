@@ -335,10 +335,10 @@ class ProductInsertScreenState extends State<ProductInsertScreen> {
                                 productCebreterraWk.setPhotosPath(allPhotos);
                                 showCircularLoadingDialog(context);
                                 Map<String, dynamic>response = await ProductCebreterraController().registerOrEditProducts(productCebreterraWk);
-                                if(response['success'] == false){
+                                if(response['success'] == false && response['error'] != 303){
                                   Navigator.of(context).pop();
                                   showMessageErrorServer(context, 
-                                    errorServer:response['errorCode'], 
+                                    errorServer:response['error'], 
                                     onPressed:(){
                                       Navigator.of(context).pop();
                                     }

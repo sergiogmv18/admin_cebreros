@@ -25,15 +25,15 @@ class _RegisterCategoryState extends State<RegisterCategory> {
   String? imgBase64;
   bool showBase64 = false;
   Map? dataOfImg;
+  String? oldNameFile;
 
   @override
   void initState() {
     if(widget.category != null){
       categoryWk = widget.category!;
-    }else{
-      generatedNumber = FunctionClass().generateRandomNumber(); 
+      oldNameFile = categoryWk.getPhotoPath();
     }
-
+    generatedNumber = FunctionClass().generateRandomNumber(); 
     super.initState();
   }
 
@@ -142,10 +142,11 @@ class _RegisterCategoryState extends State<RegisterCategory> {
             ),
           ]else...[
             if(categoryWk.getPhotoPath() != null)...[
+              const SizedBox(height: 20),
               ClipRRect(  
-                borderRadius:const BorderRadius.only(topLeft: Radius.circular(12), topRight:  Radius.circular(12)),
+                borderRadius:const BorderRadius.all(Radius.circular(12)),
                 child: Image.network(
-                  categoryWk.getPhotoPath()!,
+                  'https://cebreterra.com/storade/categories/${categoryWk.getPhotoPath()!}',
                   filterQuality:FilterQuality.high, 
                   width:MediaQuery.of(context).size.width,
                   errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
@@ -189,7 +190,7 @@ class _RegisterCategoryState extends State<RegisterCategory> {
                 onPressed: () async{
                   if (formKey.currentState!.validate() && categoryWk.getPhotoPath() != null) {
                     showCircularLoadingDialog(context);
-                    Map<String, dynamic>response = await CategoryCebreterraController().registerOrEditCategory(categoryWk, dataOfImg: dataOfImg);
+                    Map<String, dynamic>response = await CategoryCebreterraController().registerOrEditCategory(categoryWk, dataOfImg: dataOfImg, oldNameFile:oldNameFile);
                     if(response['success'] == false){
                       Navigator.of(context).pop();
                       showMessageErrorServer(context, 

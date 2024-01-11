@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:admin_cebre/cebreterra/models/product_cebreterra.dart';
 import 'package:admin_cebre/services/request.dart';
 
@@ -87,6 +88,7 @@ class ProductCebreterraController{
       parameters['id'] = productCebreterraWk.getServerId().toString();
     }
     response = await RequestHttp().httpPost(parameters: parameters,server: RequestHttp.serverCebreterra);
+    log(response.toString());
     return response;
   }
 

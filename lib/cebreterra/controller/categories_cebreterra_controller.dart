@@ -64,7 +64,7 @@ class CategoryCebreterraController{
   * @version 1.0 - 20230215 - initial release
   * @return  <Map<String, dynamic>>
   */
-  Future<Map<String, dynamic>> registerOrEditCategory(CategoryCebreterra categoryCebreterra, {Map? dataOfImg})async{
+  Future<Map<String, dynamic>> registerOrEditCategory(CategoryCebreterra categoryCebreterra, {Map? dataOfImg, String? oldNameFile})async{
     Map<String, dynamic> response = {};
     Map<String, dynamic> parameters = {
       'action':'registerOrEditCategory',
@@ -74,7 +74,9 @@ class CategoryCebreterraController{
 
     if(categoryCebreterra.getServerId() != null){
       parameters['id'] = categoryCebreterra.getServerId().toString();
+      parameters['oldNameFile'] = oldNameFile;
     }
+   
     if(dataOfImg != null){
       parameters['imgBase64New'] = dataOfImg['base64String'];
       parameters['extension'] = dataOfImg['extension'];
