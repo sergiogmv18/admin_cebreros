@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class RequestHttp {
-
-  static const serverCebreterra = 'cebreterra';
   static const  serverElCieloDeCebreros = 'elCielodeCebreros';
   /*
    * Verify url and return server specific
@@ -14,20 +12,7 @@ class RequestHttp {
    * @param <String> server
    */
   getSpecificURL(String server){
-    late String url;
-    switch(server){
-      case serverCebreterra:
-        // url = 'http://localhost/projetGit/cebrero/api/api.php';
-        url = 'https://cebreterra.com/api/api.php';
-      
-      break;
-      case serverElCieloDeCebreros:
-         // url = 'http://localhost/projetGit/cebrero/api/api.php';
-        url = 'https://cielodecebreros.com/api/api.php';
-      break;
-
-     
-    }
+    late String  url = 'https://cielodecebreros.com/api/api.php';
      return url;
   }
   

@@ -59,7 +59,8 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 flutter_icons:
-  image_path: "assets/images/logo.jpg"
+  image_path: "assets/images/logo_elcielodecebreros.png"
+  remove_alpha_ios: true
   #adaptive_icon_foreground: "assets/mr_Coolz.jpg"
   android: true
   ios: true
